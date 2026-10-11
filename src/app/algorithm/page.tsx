@@ -24,17 +24,19 @@ export default async function AlgorithmPage() {
   return (
     <>
       <article className="prose-card slab pop-in" dangerouslySetInnerHTML={{ __html: html }} />
-      <a href={REPO} className="repo-line" target="_blank" rel="noopener">
-        <GitHubMark className="gh" />
-        <span>github.com/maximevallot/graduate-junction</span>
-      </a>
-      <p className="credit-line">
-        Made by Maxime Vallot. Built on{" "}
-        <a href="https://ashdown.win" target="_blank" rel="noopener">
-          ashdown.win
-        </a>{" "}
-        by Anders Bekkevard, with thanks.
-      </p>
+      <footer className="colophon slab">
+        <a href={REPO} className="repo-line" target="_blank" rel="noopener">
+          <GitHubMark className="gh" />
+          <span>github.com/maximevallot/graduate-junction</span>
+        </a>
+        <p className="credit-line">
+          Made by Maxime Vallot. Built on{" "}
+          <a href="https://ashdown.win" target="_blank" rel="noopener">
+            ashdown.win
+          </a>{" "}
+          by Anders Bekkevard, with thanks.
+        </p>
+      </footer>
       <Dock one>
         <Link href="/" className="btn ghost">
           Back to the board

@@ -317,10 +317,12 @@ h2.shout { font-size: 26px; margin: 0; }
 .prose-card h2 { font-family: var(--display); font-weight: 400; font-size: 18px; margin: 22px 0 8px; }
 .prose-card a { color: var(--deep); font-weight: 700; white-space: nowrap; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: var(--blue); }
 .prose-card a::after { content: " ›"; }
-.repo-line { display: inline-flex; align-items: center; gap: 8px; margin: -6px 4px 18px; color: var(--ink); font-weight: 700; font-size: 14px; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; cursor: pointer; }
+.colophon { margin: 22px 0 18px; padding: 14px 16px; }
+.repo-line { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); font-weight: 700; font-size: 14px; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; cursor: pointer; }
 .repo-line .gh { width: 18px; height: 18px; flex: none; }
-.credit-line { margin: -10px 4px 18px; color: var(--ink); opacity: 0.75; font-size: 13px; font-weight: 500; }
-.credit-line a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.repo-line span { overflow-wrap: anywhere; }
+.credit-line { margin: 8px 0 0; color: var(--ink); font-size: 14px; line-height: 1.45; }
+.credit-line a { color: var(--deep); font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; text-decoration-color: var(--blue); }
 .prose-card p { margin: 0 0 12px; }
 .prose-card .katex-display { margin: 12px 0; overflow: visible; padding: 2px 0; }
 .prose-card .katex-display > .katex { white-space: normal; }

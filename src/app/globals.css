@@ -319,7 +319,7 @@ h2.shout { font-size: 26px; margin: 0; }
 .prose-card a::after { content: " ›"; }
 .repo-line { display: inline-flex; align-items: center; gap: 8px; margin: -6px 4px 18px; color: var(--ink); font-weight: 700; font-size: 14px; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; cursor: pointer; }
 .repo-line .gh { width: 18px; height: 18px; flex: none; }
-.credit-line { margin: -10px 4px 18px; color: var(--muted); font-size: 13px; }
+.credit-line { margin: -10px 4px 18px; color: var(--ink); opacity: 0.75; font-size: 13px; font-weight: 500; }
 .credit-line a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .prose-card p { margin: 0 0 12px; }
 .prose-card .katex-display { margin: 12px 0; overflow: visible; padding: 2px 0; }

@@ -27,7 +27,7 @@ export default async function AlgorithmPage() {
       <footer className="colophon slab">
         <a href={REPO} className="repo-line" target="_blank" rel="noopener">
           <GitHubMark className="gh" />
-          <span>github.com/maximevallot/graduate-junction</span>
+          <span>Source code on GitHub</span>
         </a>
         <p className="credit-line">
           Made by Maxime Vallot. Built on{" "}

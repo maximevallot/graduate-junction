@@ -3,6 +3,8 @@
 The table tennis ladder for Graduate Junction at MIT. One table, one leaderboard,
 one rating per player. Record a match, watch the numbers move.
 
+Live at [gjpong.com](https://gjpong.com).
+
 Adapted from [ashdown.win](https://github.com/andersbekkevard/ashdown-win)
 by Anders Bekkevard. The docs under `docs/` and `design/` are inherited from
 that project and still describe Ashdown.

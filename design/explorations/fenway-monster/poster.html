@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ashdown.win — the wall keeps score</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ------------------------------------------------------------------
+   Fenway steel system: painted wall, cut slots, loose plates, lamps,
+   and a bordered LED stat strip. Everything is drawn in CSS.
+   ------------------------------------------------------------------ */
+:root{
+  /* Benjamin Moore SC-12 Green Monster is #54796d on the chip; on the
+     wall it reads darker and greener under stadium light. */
+  --chip:#54796d;
+  --wall:#3f6a55;
+  --wall-lo:#325343;
+  --cavity:#182b22;
+  --plate:#3b6450;
+  --plate-hi:#4a7560;
+  --paint:#f2efe4;
+  --paint-dim:rgba(242,239,228,.72);
+  --steel:#2d3033;
+  --steel-hi:#5f6469;
+  --steel-edge:#9ea3a7;
+  --led:#131517;
+  --led-line:#8b9094;
+  --led-cap:#c6cacd;
+  --orange:#f08a2a;
+  --amber:#f3b03f;
+  --lamp-teal:#2aa9bf;
+  --lamp-red:#d8362b;
+  --lamp-amber:#f0a134;
+  --disp:'Oswald','Arial Narrow','Impact',sans-serif;
+  --cond:'Barlow Condensed','Arial Narrow',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#17191b}
+body{display:flex;justify-content:center;align-items:flex-start;padding:12mm 0;font-family:var(--cond);color:var(--paint);-webkit-font-smoothing:antialiased}
+@page{size:A4 portrait;margin:0}
+@media print{
+  html,body{background:#fff;padding:0}
+  .sheet{box-shadow:none;margin:0}
+}
+
+/* ---- the sheet is a steel-framed section of wall ---- */
+.sheet{
+  width:210mm;height:297mm;flex:none;overflow:hidden;position:relative;
+  background:var(--steel);
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+  display:flex;flex-direction:column;
+}
+.rail{
+  height:6mm;flex:none;position:relative;
+  background:
+    radial-gradient(circle at 50% 50%, #c3c7ca 0, #8c9194 22%, #4d5256 40%, transparent 46%) 0 0/14mm 6mm repeat-x,
+    linear-gradient(180deg,#5a5f63 0,#3a3e42 45%,#25282b 100%);
+  border-top:1px solid #6d7276;border-bottom:1px solid #111;
+}
+.rail.bottom{border-top:1px solid #111;border-bottom:1px solid #6d7276}
+.wall{
+  flex:1;position:relative;display:flex;flex-direction:column;
+  padding:5.5mm 8mm 4.5mm;
+  background:
+    /* sheet seams every 60 mm */
+    repeating-linear-gradient(90deg, transparent 0 59.5mm, rgba(0,0,0,.18) 59.5mm 60mm),
+    linear-gradient(180deg, rgba(255,255,255,.05) 0, rgba(0,0,0,0) 30%, rgba(0,0,0,.12) 100%),
+    var(--wall);
+  border-left:3mm solid var(--steel);border-right:3mm solid var(--steel);
+  box-shadow:inset 2px 0 0 #171a1c, inset -2px 0 0 #171a1c, inset 0 3px 8px rgba(0,0,0,.35);
+}
+
+/* ---- painted lettering ---- */
+.painted{font-family:var(--disp);text-transform:uppercase;color:var(--paint);line-height:1}
+.kicker{font:600 4.2mm/1 var(--cond);letter-spacing:.22em;color:var(--paint-dim);text-transform:uppercase}
+h1.painted{font-weight:700;font-size:17.5mm;letter-spacing:.005em;margin:2mm 0 2.6mm;line-height:.94;white-space:nowrap}
+h1 .dot{color:var(--amber)}
+.lede{font:500 4.5mm/1.26 var(--cond);max-width:160mm;color:var(--paint)}
+
+/* ---- slot and plate ---- */
+.slot{
+  background:var(--cavity);padding:.9mm;display:inline-flex;
+  box-shadow:inset 0 1.1mm 1.4mm rgba(0,0,0,.7), inset .5mm 0 .8mm rgba(0,0,0,.45),
+             inset 0 -.3mm 0 rgba(255,255,255,.13), inset -.3mm 0 0 rgba(255,255,255,.06);
+}
+.plate{
+  background:linear-gradient(180deg,var(--plate-hi) 0,var(--plate) 55%,#365c49 100%);
+  box-shadow:inset 0 .3mm 0 rgba(255,255,255,.18), inset 0 -.3mm 0 rgba(0,0,0,.25), 0 .5mm .8mm rgba(0,0,0,.55);
+  font-family:var(--disp);font-weight:600;color:var(--paint);
+  display:flex;align-items:center;justify-content:center;line-height:1;
+}
+.plate.amber{color:var(--amber)}
+
+/* ---- board section ---- */
+.board{margin-top:4mm}
+.board table{border-collapse:collapse;width:100%}
+.board th{font:600 3.6mm/1 var(--cond);letter-spacing:.18em;color:var(--paint-dim);text-align:left;padding:0 0 1.6mm;text-transform:uppercase}
+.board th.num,.board td.num{text-align:center}
+.board td{padding:1mm 0;vertical-align:middle}
+.board td.rank{width:16mm}
+.board td.name{padding-left:3mm}
+.board td.name .painted{font-size:7.8mm;font-weight:700;letter-spacing:.01em;white-space:nowrap}
+.board td.rating{width:52mm;padding-left:8mm}
+.board td.wl{width:15mm;text-align:center}
+.board .gap{width:6mm}
+.digits{display:inline-flex;gap:1.4mm}
+.digits .slot .plate{width:8.8mm;height:11mm;font-size:8.6mm}
+.rank .slot .plate{width:10.5mm;height:11mm;font-size:7.8mm}
+.wl .slot .plate{width:8.6mm;height:8.6mm;font-size:6mm;font-weight:500}
+.board tr.leader td.name .painted{color:var(--amber)}
+
+/* ---- the lower indicator band: how it works ---- */
+.band{
+  margin-top:4mm;display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;
+  border-top:.6mm solid rgba(242,239,228,.55);border-bottom:.6mm solid rgba(242,239,228,.55);
+  padding:2.8mm 0 2.6mm;
+}
+.step{padding:0 4mm;border-left:.35mm solid rgba(242,239,228,.35);display:flex;flex-direction:column}
+.step .lamps{margin-top:auto;padding-top:1.8mm}
+.step:first-child{border-left:0;padding-left:0}
+.step:last-child{padding-right:0}
+.step .head{display:flex;align-items:center;gap:2.4mm;margin-bottom:1.8mm}
+.step .head .slot .plate{width:7.6mm;height:9.4mm;font-size:7.2mm}
+.step .head .painted{font-size:5.5mm;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+.step p{font:500 3.8mm/1.26 var(--cond);color:var(--paint)}
+.lamps{display:flex;gap:1.6mm;margin-top:1.8mm;align-items:center}
+.lamp{
+  width:5.2mm;height:5.2mm;border-radius:50%;flex:none;
+  background:radial-gradient(circle at 38% 30%, #fff 0, rgba(255,255,255,.5) 12%, var(--c) 34%, color-mix(in srgb,var(--c) 45%,#000) 100%);
+  box-shadow:0 0 0 .6mm #1b1e20, 0 0 0 1mm #7c8185, 0 .4mm .6mm 1mm rgba(0,0,0,.45), inset 0 -.8mm 1mm rgba(0,0,0,.45);
+}
+.lamp.off{background:radial-gradient(circle at 38% 30%, rgba(255,255,255,.28) 0, color-mix(in srgb,var(--c) 40%,#1a1a1a) 30%, #0d0e0e 100%)}
+.lamp.teal{--c:var(--lamp-teal)}.lamp.red{--c:var(--lamp-red)}.lamp.amber{--c:var(--lamp-amber)}
+.lamps .lbl{font:600 3.3mm/1 var(--cond);letter-spacing:.14em;color:var(--paint-dim);margin-left:1.2mm;text-transform:uppercase}
+
+/* ---- LED stat strip: bordered cell grid ---- */
+.led{
+  margin-top:4mm;background:var(--led);padding:2.2mm;
+  border:.5mm solid #4a4f53;box-shadow:inset 0 0 0 .4mm #0a0b0c, 0 .8mm 1.2mm rgba(0,0,0,.5);
+  display:grid;grid-template-columns:1.9fr 1fr 1fr 1fr;gap:1.6mm;
+}
+.cell{border:.35mm solid var(--led-line);padding:1.5mm 2.2mm 1.3mm;display:flex;flex-direction:column;justify-content:space-between;min-height:15.5mm}
+.cell .cap{font:600 3.3mm/1 var(--cond);letter-spacing:.14em;color:var(--led-cap);text-transform:uppercase}
+.cell .val{font:500 9.5mm/1 var(--disp);color:#fff;margin-top:1.4mm}
+.cell .val.orange{color:var(--orange)}
+.cell .formula{font:500 8mm/1 var(--disp);color:#fff;margin-top:1.4mm;letter-spacing:.02em;white-space:nowrap}
+.cell .formula b{color:var(--orange);font-weight:500}
+.cell .formula small{font:500 3.6mm/1 var(--cond);color:var(--led-cap);letter-spacing:.04em;display:block;margin-top:1.6mm;text-transform:none}
+
+/* ---- the URL, painted very large ---- */
+.url{margin-top:6mm;display:flex;align-items:flex-end;justify-content:space-between;gap:4mm}
+.url .painted{font-size:27mm;font-weight:700;letter-spacing:-.005em;line-height:.9;white-space:nowrap}
+.url .painted .dot{color:var(--amber)}
+.qr{
+  width:30mm;height:30mm;flex:none;background:var(--paint);padding:2mm;
+  box-shadow:0 .6mm 1mm rgba(0,0,0,.5), inset 0 0 0 .5mm #d9d5c8;
+}
+.qr svg{width:100%;height:100%;display:block}
+.urlnote{display:flex;justify-content:space-between;align-items:center;margin-top:3mm}
+.urlnote .kicker{letter-spacing:.2em;font-size:4.6mm}
+.urlnote .kicker b{color:var(--amber);font-weight:600}
+
+/* ---- footer plate on the bottom rail ---- */
+.foot{
+  margin-top:auto;display:flex;justify-content:space-between;align-items:center;
+  padding-top:2.8mm;border-top:.35mm solid rgba(242,239,228,.35);
+  font:500 3.5mm/1 var(--cond);letter-spacing:.08em;color:var(--paint-dim);text-transform:uppercase;white-space:nowrap;gap:4mm
+}
+.foot .mono{font-family:var(--disp);font-weight:500;letter-spacing:.03em;text-transform:none;color:var(--paint)}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="rail top"></div>
+  <div class="wall">
+
+    <div class="kicker">Ashdown House &nbsp;·&nbsp; MIT &nbsp;·&nbsp; one table &nbsp;·&nbsp; one board</div>
+    <h1 class="painted">The wall keeps score<span class="dot">.</span></h1>
+    <p class="lede">ashdown.win is the public table tennis ladder for Ashdown House. No accounts and nothing to install: one name, one rating, and every match ever played on the record for anyone to read.</p>
+
+    <div class="board">
+      <table>
+        <thead><tr>
+          <th class="num" style="width:16mm">Rank</th>
+          <th style="padding-left:3mm">Player</th>
+          <th style="padding-left:8mm">Rating</th>
+          <th class="num">W</th>
+          <th class="num">L</th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+
+    <div class="band">
+      <div class="step">
+        <div class="head"><span class="slot"><span class="plate">1</span></span><span class="painted">Create your name</span></div>
+        <p>Once. Full name by default, or your MIT username if you would rather not. Everyone starts at 1000.</p>
+        <div class="lamps"><span class="lamp teal"></span><span class="lamp teal off"></span><span class="lbl">Player</span></div>
+      </div>
+      <div class="step">
+        <div class="head"><span class="slot"><span class="plate">2</span></span><span class="painted">Record a match</span></div>
+        <p>Pick both names, tap the winner. Doubles is one switch. Anyone at the table can file it, and anyone can see who did.</p>
+        <div class="lamps"><span class="lamp amber"></span><span class="lamp amber off"></span><span class="lbl">Match</span></div>
+      </div>
+      <div class="step">
+        <div class="head"><span class="slot"><span class="plate">3</span></span><span class="painted">Watch the board</span></div>
+        <p>The plates change the moment the match is in. Filed it wrong? Delete it; the deletion goes on the log like everything else.</p>
+        <div class="lamps"><span class="lamp red"></span><span class="lamp red off"></span><span class="lbl">Board</span></div>
+      </div>
+    </div>
+
+    <div class="led">
+      <div class="cell">
+        <div class="cap">The rating rule &nbsp;·&nbsp; standard Elo, as in chess</div>
+        <div class="formula">R&prime; = R + K&thinsp;(S &minus; E)<small>E = 1 / (1 + 10^((R<sub>opp</sub> &minus; R) / 400)); S is 1 for a win, 0 for a loss</small></div>
+      </div>
+      <div class="cell"><div class="cap">K singles</div><div class="val orange">32</div></div>
+      <div class="cell"><div class="cap">K doubles</div><div class="val">16</div></div>
+      <div class="cell"><div class="cap">Start</div><div class="val">1000</div></div>
+    </div>
+
+    <div class="url">
+      <div class="painted">ashdown<span class="dot">.</span>win</div>
+      <div class="qr" aria-label="QR code placeholder">
+        <svg viewBox="0 0 29 29" shape-rendering="crispEdges" fill="#17191b">
+          <!-- finder patterns -->
+          <path d="M0 0h7v7H0zM1 1v5h5V1zM2 2h3v3H2z" fill-rule="evenodd"/>
+          <path d="M22 0h7v7h-7zM23 1v5h5V1zM24 2h3v3h-3z" fill-rule="evenodd"/>
+          <path d="M0 22h7v7H0zM1 23v5h5v-5zM2 24h3v3H2z" fill-rule="evenodd"/>
+          <!-- timing -->
+          <path d="M8 6h1v1H8zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM6 8h1v1H6zM6 10h1v1H6zM6 12h1v1H6zM6 14h1v1H6zM6 16h1v1H6zM6 18h1v1H6zM6 20h1v1H6z"/>
+          <!-- placeholder modules -->
+          <path d="M9 1h2v1H9zM12 2h1v2h-1zM14 1h2v1h-2zM17 3h2v1h-2zM10 3h1v2h-1zM19 1h1v1h-1zM9 9h3v1H9zM13 9h1v1h-1zM16 8h2v2h-2zM19 9h2v1h-2zM8 11h1v2H8zM10 12h2v1h-2zM14 11h1v3h-1zM16 12h3v1h-3zM20 11h1v2h-1zM9 14h2v1H9zM12 15h1v2h-1zM15 15h3v1h-3zM19 14h2v2h-2zM8 17h2v1H8zM11 18h2v1h-2zM14 17h1v3h-1zM17 18h2v1h-2zM20 17h1v2h-1zM9 20h1v1H9zM11 20h3v1h-3zM16 20h1v1h-1zM18 21h3v1h-3zM22 9h2v1h-2zM25 8h1v3h-1zM27 9h2v1h-2zM23 12h2v1h-2zM26 11h1v3h-1zM22 15h1v2h-1zM24 14h3v1h-3zM27 16h2v1h-2zM23 18h2v1h-2zM26 17h1v3h-1zM28 19h1v2h-1zM22 21h1v2h-1zM24 22h3v1h-3zM27 23h2v1h-2zM23 25h2v1h-2zM25 26h1v3h-1zM27 26h2v1h-2zM9 23h2v1H9zM12 22h1v3h-1zM14 23h3v1h-3zM18 22h2v2h-2zM9 26h1v2H9zM11 27h3v1h-3zM15 26h2v1h-2zM18 25h1v3h-1zM20 27h1v1h-1z"/>
+        </svg>
+      </div>
+    </div>
+    <div class="urlnote">
+      <div class="kicker">Type it or scan it <b>·</b> works on any phone <b>·</b> no app <b>·</b> no account</div>
+    </div>
+
+    <div class="foot">
+      <span>Open source: <span class="mono">github.com/andersbekkevard/ashdown-win</span></span>
+      <span>Ratings recomputed from the full match log</span>
+    </div>
+
+  </div>
+  <div class="rail bottom"></div>
+</div>
+
+<script>
+// Shared exploration data, inlined so the file is self-contained.
+const DATA = {"site":{"name":"ashdown.win","url":"ashdown.win","repo":"github.com/andersbekkevard/ashdown-win"},"constants":{"kSingles":32,"kDoubles":16,"start":1000},"leaderboard":[{"rank":1,"name":"Priya Raman","rating":1142,"matches":21,"wins":16},{"rank":2,"name":"Tomás Ferreira","rating":1108,"matches":17,"wins":12},{"rank":3,"name":"Anders Bekkevard","rating":1071,"matches":14,"wins":9},{"rank":4,"name":"jchen26","rating":1054,"matches":9,"wins":6},{"rank":5,"name":"Mei Nakamura","rating":1033,"matches":11,"wins":6},{"rank":6,"name":"Daniel Okafor","rating":1012,"matches":6,"wins":3},{"rank":7,"name":"Sofia Almeida","rating":1000,"matches":0,"wins":0},{"rank":8,"name":"Lukas Weber","rating":987,"matches":5,"wins":2},{"rank":9,"name":"The Ghost of 4th Floor","rating":971,"matches":8,"wins":3},{"rank":10,"name":"Hannah Cohen","rating":958,"matches":12,"wins":4},{"rank":11,"name":"Ravi Menon","rating":934,"matches":7,"wins":1},{"rank":12,"name":"Emma Lindqvist","rating":913,"matches":10,"wins":2}]};
+
+const plate = (t, cls='') => `<span class="slot"><span class="plate ${cls}">${t}</span></span>`;
+const digits = n => `<span class="digits">${String(n).split('').map(d => plate(d)).join('')}</span>`;
+const rows = DATA.leaderboard.slice(0, 6).map((p, i) => `
+  <tr class="${i === 0 ? 'leader' : ''}">
+    <td class="rank num">${plate(String(p.rank).padStart(2,'0'))}</td>
+    <td class="name"><span class="painted">${p.name}</span></td>
+    <td class="rating">${digits(p.rating)}</td>
+    <td class="wl">${plate(p.wins)}</td>
+    <td class="wl">${plate(p.matches - p.wins)}</td>
+  </tr>`).join('');
+document.getElementById('rows').innerHTML = rows;
+</script>
+</body>
+</html>

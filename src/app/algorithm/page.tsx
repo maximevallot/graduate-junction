@@ -6,7 +6,7 @@ import { renderAlgorithmDoc } from "@/lib/algorithm-doc";
 // Dynamic because the shared top bar reads the latest match time.
 export const dynamic = "force-dynamic";
 
-const REPO = "https://github.com/theHackingGrandma/graduate-junction";
+const REPO = "https://github.com/maximevallot/graduate-junction";
 
 function GitHubMark({ className }: { className?: string }) {
   return (
@@ -26,7 +26,7 @@ export default async function AlgorithmPage() {
       <article className="prose-card slab pop-in" dangerouslySetInnerHTML={{ __html: html }} />
       <a href={REPO} className="repo-line" target="_blank" rel="noopener">
         <GitHubMark className="gh" />
-        <span>github.com/theHackingGrandma/graduate-junction</span>
+        <span>github.com/maximevallot/graduate-junction</span>
       </a>
       <Dock one>
         <Link href="/" className="btn ghost">

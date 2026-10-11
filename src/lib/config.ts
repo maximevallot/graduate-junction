@@ -17,5 +17,4 @@ export const START_RATING = 1000;
 export const MAX_NAME_LENGTH = 60;
 
 /** WhatsApp group for arranging games. Public invite, no approval gate. */
-// TODO: replace with the Graduate Junction group invite link before launch.
-export const WHATSAPP_GROUP_URL = "https://chat.whatsapp.com/REPLACE_ME";
+export const WHATSAPP_GROUP_URL = "https://chat.whatsapp.com/GuGoKogM52u5lFxUljNgaE";

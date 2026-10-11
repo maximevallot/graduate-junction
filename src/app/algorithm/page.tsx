@@ -28,6 +28,13 @@ export default async function AlgorithmPage() {
         <GitHubMark className="gh" />
         <span>github.com/maximevallot/graduate-junction</span>
       </a>
+      <p className="credit-line">
+        Made by Maxime Vallot. Built on{" "}
+        <a href="https://ashdown.win" target="_blank" rel="noopener">
+          ashdown.win
+        </a>{" "}
+        by Anders Bekkevard, with thanks.
+      </p>
       <Dock one>
         <Link href="/" className="btn ghost">
           Back to the board
